@@ -1,0 +1,29 @@
+version: "1"
+
+services:
+  - type: web
+    name: ethical-dilemmas-simulator
+    runtime: node
+    plan: free
+    numInstances: 1
+    buildCommand: corepack enable && corepack prepare pnpm@10.0.0 --activate && pnpm install --frozen-lockfile && pnpm build
+    startCommand: node deploy/render-start.mjs
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: "22.22.3"
+      - key: NODE_ENV
+        value: "production"
+      - key: CLASSROOM_TTL_MINUTES
+        value: "30"
+      - key: CLASSROOM_MIN_PARTICIPANTS
+        value: "3"
+      - key: CLASSROOM_MAX_PARTICIPANTS
+        value: "100"
+      - key: CLASSROOM_MAX_ROOMS
+        value: "100"
+      - key: AUTHOR_KEY
+        generateValue: true
+      - key: REVIEWER_KEY
+        value: ""
